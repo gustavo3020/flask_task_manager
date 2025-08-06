@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks - Task Manager{% endblock %}
+
+{% block content %}
+    <!-- Main heading for the task manager application -->
+    <h1>Task Manager</h1>
+
+    <!-- Section for creating a new task -->
+    <h2>New Task</h2>
+    <form method="POST" action="{{ url_for('home') }}">
+        <label for="description">Task Description:</label><br>
+        <input type="text" id="description" name="description" required><br><br>
+        <input type="submit" value="Add Task">
+    </form>
+
+    <hr> <!-- Horizontal rule to separate sections -->
+
+    <!-- Section for displaying the list of tasks -->
+    <h2>My tasks</h2>
+    {% if tasks %}
+        <ul>
+        {% for task in tasks %}
+            <li>
+                <!-- Display task details -->
+                Task: {{ task.description }}; 
+                Completed: {{ task.completed }}; 
+                Created at: {{ task.created_at }}
+                
+                <!-- Form for deleting a task (uses POST method for security) -->
+                <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+
+                <!-- Link to the update task page (uses GET method to display form) -->
+                <a href="{{ url_for('update_task', task_id=task.id) }}">Update</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <!-- Message displayed if no tasks are found -->
+        <p>No tasks.</p>
+    {% endif %}
+{% endblock %}

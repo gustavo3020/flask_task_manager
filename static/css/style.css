@@ -1,0 +1,114 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Styling for main headings */
+h1, h2 {
+    color: #0056b3;
+}
+
+/* Styling for forms */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Styling for text inputs and submit buttons */
+input[type="text"], input[type="email"], input[type="submit"] {
+    width: calc(100% - 22px); /* Adjusts for padding and border */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Styling for submit buttons */
+input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for submit buttons */
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for unordered lists */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Styling for individual list items */
+li {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+
+/* Styling for forms specifically inside list items (to reset default form styles) */
+li form {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+/* General styling for buttons and links inside list items */
+li button, li a {
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+    white-space: nowrap; /* Prevents button text from wrapping */
+}
+
+/* Styling for delete buttons inside list items */
+li button {
+    background-color: #dc3545; /* Red color for delete */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for delete buttons */
+li button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Styling for update links inside list items */
+li a {
+    background-color: #ffc107; /* Yellow color for update */
+    color: #212529;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for update links */
+li a:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+}
+
+/* Styling for horizontal rule (separator) */
+hr {
+    border: 0;
+    height: 1px;
+    background: #ccc;
+    margin: 30px 0;
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page title, dynamically set by child templates -->
+    <title>{% block title %}Task Manager App{% endblock %}</title>
+    <!-- Link to the main stylesheet for global styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Main container for page content -->
+    <div class="container">
+        <!-- This block will be filled by specific page content from child templates -->
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
