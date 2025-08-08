@@ -140,6 +140,7 @@ def register():
                 db.session.commit()
                 flash('Registration successful! Please log in to continue.',
                       'success')
+                return redirect(url_for('login'))
             except IntegrityError:
                 # Catches the duplicate email error, rolls back the session,
                 # and notifies the user.
