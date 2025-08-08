@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <!-- Page heading for the registration form -->
+    <h1>Register</h1>
+
+    <!--
+    Form for user registration.
+    The "POST" method sends the form data to the same URL (/register) for processing.
+    -->
+    <form method="POST">
+        <!-- Input field for the user's name -->
+        <label for="user_name">user name:</label><br>
+        <input type="text" id="user_name" name="user_name" required><br><br>
+
+        <!-- Input field for the user's email, using type="email" for client-side validation -->
+        <label for="email">e-mail:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <!-- Input field for the password, using type="password" to hide the input -->
+        <label for="password">password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <!-- Submit button to create a new user account -->
+        <input type="submit" value="Create Account"><br><br>
+    </form>
+{% endblock %}

@@ -1,8 +1,12 @@
-from flask import Flask, request, render_template, redirect, url_for
-from models import db, Task
+from flask import Flask, request, render_template, redirect, url_for, flash
+from models import db, Task, User
+from sqlalchemy.exc import IntegrityError
 
+# Create the Flask application and configure the secret key for sessions
 app = Flask(__name__)
+app.secret_key = 'b\x80V\xe1s\x00S\xdbd\xc2\xc9\x04\xf1\xf4\x8e\x16'
 
+# Database configuration (SQLite)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -20,7 +24,7 @@ def home():
           Redirects to the home page after creation.
 
     Returns:
-        Response: Renders 'template.html' on GET, or redirects to 'home' on
+        Response: Renders 'index.html' on GET, or redirects to 'home' on
         POST.
     """
     if request.method == 'POST':
@@ -33,6 +37,52 @@ def home():
 
     tasks = Task.query.all()
     return render_template('index.html', tasks=tasks)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+    Handles user registration.
+
+    On a GET request, it renders the 'register.html' template with the
+    registration form.
+    On a POST request, it processes the form submission to create a new user.
+    It performs server-side validation to check for empty fields and duplicate
+    emails.
+    If registration is successful, it commits the new user to the database and
+    redirects to the home page with a success message.
+    If an error occurs, it flashes an appropriate message to the user.
+
+    Returns:
+        Response: Renders 'register.html' on GET or on form submission with
+        errors, or redirects to 'home' on successful registration.
+    """
+    if request.method == 'POST':
+        user_name = request.form.get('user_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Fail-fast validation for empty fields.
+        if not all([user_name, email, password]):
+            flash('All fields are required.', 'error')
+        else:
+            try:
+                new_user = User(user_name=user_name, email=email,
+                                role='common')
+                new_user.set_password(password)
+                db.session.add(new_user)
+                db.session.commit()
+                flash('Registration successful! Please log in to continue.',
+                      'success')
+            except IntegrityError:
+                db.session.rollback()
+                flash('''This email is already registered. Please use a
+                      different one.''', 'error')
+            except Exception as e:
+                db.session.rollback()
+                flash(f'An unexpected error occurred: {e}', 'error')
+
+    return render_template('register.html')
 
 
 @app.route('/update_task/<int:task_id>', methods=['GET', 'POST'])

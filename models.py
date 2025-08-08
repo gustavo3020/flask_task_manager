@@ -23,7 +23,7 @@ class User(db.Model):
     user_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     role = db.Column(db.String(50), nullable=False)
-    password_hash = db.Column(db.String(150), nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
 
     def set_password(self, password):
         """Hashes the password and sets it to the password_hash attribute."""
