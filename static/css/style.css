@@ -6,12 +6,19 @@ body {
     color: #333;
 }
 
+/* Page container for general content */
+.container {
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
 /* Styling for main headings */
 h1, h2 {
     color: #0056b3;
+    text-align: center;
 }
 
-/* Styling for forms */
+/* --- Forms (general styles) --- */
 form {
     background-color: #fff;
     padding: 20px;
@@ -20,13 +27,27 @@ form {
     margin-bottom: 20px;
 }
 
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-size: 16px;
+}
+
 /* Styling for text inputs and submit buttons */
-input[type="text"], input[type="email"], input[type="submit"] {
-    width: calc(100% - 22px); /* Adjusts for padding and border */
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 /* Styling for submit buttons */
@@ -36,6 +57,9 @@ input[type="submit"] {
     cursor: pointer;
     border: none;
     transition: background-color 0.3s ease;
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 4px;
 }
 
 /* Hover effect for submit buttons */
@@ -43,75 +67,37 @@ input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
-/* Styling for unordered lists */
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-/* Styling for individual list items */
-li {
-    background-color: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
-}
-
-/* Styling for forms specifically inside list items (to reset default form styles) */
-li form {
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-    background-color: transparent;
-}
-
-/* General styling for buttons and links inside list items */
-li button, li a {
-    padding: 8px 12px;
-    border-radius: 4px;
+/* --- Buttons and Links --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
     text-decoration: none;
-    margin-left: 10px;
-    white-space: nowrap; /* Prevents button text from wrapping */
-}
-
-/* Styling for delete buttons inside list items */
-li button {
-    background-color: #dc3545; /* Red color for delete */
-    color: white;
-    border: none;
+    border-radius: 4px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 1px solid transparent;
 }
 
-/* Hover effect for delete buttons */
-li button:hover {
-    background-color: #c82333; /* Darker red on hover */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
 }
 
-/* Styling for update links inside list items */
-li a {
-    background-color: #ffc107; /* Yellow color for update */
-    color: #212529;
-    transition: background-color 0.3s ease;
+.btn-primary:hover {
+    background-color: #0056b3;
 }
 
-/* Hover effect for update links */
-li a:hover {
-    background-color: #e0a800; /* Darker yellow on hover */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
 }
 
-/* Styling for horizontal rule (separator) */
-hr {
-    border: 0;
-    height: 1px;
-    background: #ccc;
-    margin: 30px 0;
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
+
+/* --- Navigation Bar and Flash Messages --- */
 
 /* Container for the user nav bar */
 .user-nav {
@@ -123,36 +109,45 @@ hr {
 }
 
 /* Styling for the user section within the nav bar */
-.user {
+.nav-content {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 15px; /* Adds space between the user name and the link */
+    gap: 15px; /* Adds space between the user name and the links */
+}
+
+.user-info {
     color: #0056b3;
     font-weight: bold;
 }
 
-.user a {
+.nav-link {
     text-decoration: none;
     color: #0056b3;
     transition: color 0.3s ease;
 }
 
-.user a:hover {
+.nav-link:hover {
     color: #007bff;
 }
 
 /* Styling for the flash message container */
-.flash_box {
+.flash-messages-container {
     text-align: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .flashes {
     list-style-type: none;
     padding: 10px;
-    margin: 10px auto;
+    margin: 0 auto;
     width: 80%;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .success {
@@ -167,7 +162,210 @@ hr {
     border: 1px solid #f5c6cb;
 }
 
-.completed {
-    text-decoration: line-through;
+/* --- Main Page Task List --- */
+ul {
+    list-style: none;
+    padding: 0;
 }
 
+li {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+li form {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+li button, li a {
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+li button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+li button:hover {
+    background-color: #c82333;
+}
+
+li a {
+    background-color: #ffc107;
+    color: #212529;
+    transition: background-color 0.3s ease;
+}
+
+li a:hover {
+    background-color: #e0a800;
+}
+
+.task-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-form .btn {
+    margin-top: 15px;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    gap: 15px;
+}
+
+.task-info {
+    flex-grow: 1;
+}
+
+.task-description {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+}
+
+.task-meta {
+    display: block;
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+}
+
+.task-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.no-tasks-message {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.fa-check-circle {
+    color: #28a745; /* Green */
+}
+
+.fa-times-circle {
+    color: #dc3545; /* Red */
+}
+
+/* --- Admin Dashboard Specific Styles --- */
+.content-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-heading {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.user-table thead th {
+    background-color: #f2f2f2;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    color: #555;
+}
+
+.user-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.user-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.home-btn {
+    background-color: #007bff;
+}
+
+.update-btn {
+    background-color: #3498db;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+}
+
+.btn-action:hover {
+    filter: brightness(1.1);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}

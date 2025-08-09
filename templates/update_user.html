@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Update User{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <!-- Heading for the update user form, including the user's name -->
+        <h1 class="main-heading">Update User: {{ user.user_name }}</h1>
+
+        <!-- Form for updating an existing user -->
+        <form method="POST">
+            <!-- Input fields pre-filled with the current user data -->
+            <div class="form-group">
+                <label for="user_name">User Name:</label>
+                <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <!-- Using a select dropdown to prevent incorrect role names -->
+                <select id="role" name="role" class="form-control" required>
+                    <option value="common" {% if user.role == "common" %}selected{% endif %}>common</option>
+                    <option value="master" {% if user.role == "master" %}selected{% endif %}>master</option>
+                </select>
+            </div>
+            
+            <hr>
+
+            <!-- Submit button to update an existing task  -->
+            <input type="submit" value="Update User" class="btn btn-primary">
+            
+            <!-- Link to return to the admin page without saving changes -->
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,25 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Update Task - Task Manager{% endblock %}
+{% block title %}Update Task{% endblock %}
 
 {% block content %}
-    <!-- Heading for the update task form, including the task ID -->
-    <h1>Update task {{task.id}}</h1>
+    <div class="content-container">
+        <!-- Heading for the update task form, including the task's ID -->
+        <h1 class="main-heading">Update Task</h1>
 
-    <!-- Form for updating an existing task -->
-    <form method="POST">
-        <!-- Input field pre-filled with the current task description -->
-        <label for="description">Task Description:</label><br>
-        <input type="text" id="description" name="description" value="{{task.description}}" required><br><br>
+        <!-- Form for updating an existing task -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="description">Task Description:</label>
+                <input type="text" id="description" name="description" value="{{ task.description }}" class="form-control" required>
+            </div>
 
-        <!-- Checkbox for task completion status, checked if task is already completed -->
-        <label for="completed">Completed:</label>
-        <input type="checkbox" id="completed" name="completed" {% if task.completed %}checked{% endif %}><br><br>
+            <div class="form-group">
+                <label for="completed">Task Status:</label>
+                <!-- A select dropdown is used to control the completed status -->
+                <select id="completed" name="completed" class="form-control">
+                    <option value="False" {% if not task.completed %}selected{% endif %}>In Progress</option>
+                    <option value="True" {% if task.completed %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
 
-        <!-- Submit button to update an existing task  -->
-        <input type="submit" value="Update task"><br><br>
-    </form>
-
-    <!-- Link to return to the home page without saving changes -->
-    <a href="{{ url_for('home') }}">Cancel</a>
+            <input type="submit" value="Update Task" class="btn btn-primary">
+            
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
 {% endblock %}

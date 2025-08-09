@@ -3,23 +3,29 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <!-- Page heading for the registration form -->
-    <h1>Login</h1>
+    <div class="content-container">
+        <!-- Page heading for the login form -->
+        <h1 class="main-heading">Login</h1>
 
-    <!--
-    Form for user login.
-    The "POST" method sends the form data to the same URL (/login) for processing.
-    -->
-    <form method="POST">
-        <!-- Input field for the user's email, using type="email" for client-side validation -->
-        <label for="email">E-mail:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+        <!-- Form for user login. -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
 
-        <!-- Input field for the password, using type="password" to hide the input -->
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            
+            <input type="submit" value="Login" class="btn btn-primary">
+        </form>
 
-        <!-- Submit button login -->
-        <input type="submit" value="Login"><br><br>
-    </form>
+        <hr>
+
+        <p class="text-center">
+            Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+        </p>
+    </div>
 {% endblock %}

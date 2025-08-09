@@ -64,6 +64,28 @@ def home():
     return render_template('index.html', tasks=tasks)
 
 
+@app.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():
+    """
+    Handles the administration dashboard, displaying a list of all users.
+
+    This route is protected to be accessible only by users with the 'master'
+    role.
+    It fetches all users from the database and passes them to the 'admin.html'
+    template for display.
+
+    Returns:
+        Response: Renders 'admin.html' with a list of all users, or redirects
+        to 'home' with an error if the user is not a 'master'.
+    """
+    if current_user.role != 'master':
+        flash('You do not have permission to access this page.', 'error')
+        return redirect(url_for('home'))
+
+    return render_template('admin.html', users=User.query.all())
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
@@ -185,7 +207,7 @@ def update_task(task_id):
 
     if request.method == 'POST':
         task.description = request.form['description']
-        task.completed = 'completed' in request.form
+        task.completed = request.form.get('completed') == 'True'
         db.session.commit()
         return redirect(url_for('home'))
 
@@ -223,6 +245,80 @@ def delete_task(task_id):
     db.session.delete(task_to_delete)
     db.session.commit()
     return redirect(url_for('home'))
+
+
+@app.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def update_user(user_id):
+    """
+    Handles updating an existing user's information, accessible only to
+    'master' users.
+
+    Args:
+        user_id (int): The unique identifier of the user to be updated.
+
+    On a GET request, it renders the 'update_user.html' template with the
+    user's current information. On a POST request, it processes form data to
+    update the user's name, email, and role.
+
+    A security check is performed to prevent a 'master' user from accidentally
+    updating their own role.
+
+    Returns:
+        Response: Renders 'update_user.html' on GET, or redirects to 'admin'
+        on POST.
+    """
+    user = db.get_or_404(User, user_id)
+    if current_user.role != 'master':
+        flash('You do not have permission to update users.', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        if current_user.id == user.id:
+            flash("You cannot update your own role.", "error")
+            return redirect(url_for('admin'))
+
+        user.user_name = request.form['user_name']
+        user.email = request.form['email']
+        user.role = request.form['role']
+        db.session.commit()
+        flash(f'User {user.user_name} updated successfully.', 'success')
+        return redirect(url_for('admin'))
+
+    return render_template('update_user.html', user=user)
+
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    """
+    Handles deleting an existing user, accessible only to 'master' users.
+
+    Args:
+        user_id (int): The unique identifier of the user to be deleted.
+
+    On a POST request, it deletes the specified user from the database.
+
+    A security check is performed to prevent a 'master' user from accidentally
+    deleting their own account.
+
+    Returns:
+        Response: Redirects to the 'admin' page.
+    """
+    user_to_delete = db.get_or_404(User, user_id)
+
+    if current_user.role != 'master':
+        flash('You do not have permission to delete users.', 'error')
+        return redirect(url_for('home'))
+
+    if current_user.id == user_to_delete.id:
+        flash("You cannot delete your own account.", "error")
+        return redirect(url_for('admin'))
+
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    flash(f'User {user_to_delete.user_name} deleted successfully.', 'success')
+    return redirect(url_for('admin'))
 
 
 if __name__ == '__main__':

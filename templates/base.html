@@ -7,13 +7,14 @@
     <title>{% block title %}Task Manager App{% endblock %}</title>
     <!-- Link to the main stylesheet for global styling -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
     <!-- Block to display flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <!-- Container for styling flash messages -->
-        <div class="flash_box">
+        <div class="flash-messages-container">
             <ul class="flashes">
             {% for category, message in messages %}
                 <li class="{{ category }}">{{ message }}</li>
@@ -27,20 +28,11 @@
     <nav class="user-nav">
         {% if current_user.is_authenticated %}
             <!-- Content displayed for logged-in users -->
-            <div class="user">
-                <span>Hello, <b>{{ current_user.user_name }}</b></span>
-                <a href="{{ url_for('logout') }}">Logout</a>
-            </div>
-        {% else %}
-            <!-- Content displayed for non-authenticated users -->
-            <div class="user">
-                <!-- Shows the login link only if not on the login page -->
-                {% if request.endpoint != 'login' %}
-                <a href="{{ url_for('login') }}">Login</a>
-                {% endif %}
-                <!-- Shows the register link only if not on the register page -->
-                {% if request.endpoint != 'register' %}
-                <a href="{{ url_for('register') }}">Register</a>
+            <div class="nav-content">
+                <span class="user-info">Hello, <b>{{ current_user.user_name }}</b></span>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                {% if current_user.role == "master" %}
+                    <a href="{{ url_for('admin') }}" class="nav-link">Admin</a>
                 {% endif %}
             </div>
         {% endif %}

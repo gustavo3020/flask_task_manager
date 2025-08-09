@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <!-- Page heading for the admin form -->
+        <h1 class="main-heading">Admin Dashboard</h1>
+        <a href="{{ url_for('home') }}" class="btn-action home-btn" title="Go to Home">
+            <i class="fas fa-home"></i>
+        </a>
+
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.user_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="actions-cell">
+                        <!-- Link to the update page with an icon -->
+                        <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn-action update-btn" title="Update User">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Form for the delete action with an icon and confirmation -->
+                        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="post" class="delete-form" style="display:inline;">
+                            <button type="submit" class="btn-action delete-btn" title="Delete User" onclick="return confirmDelete('{{ user.user_name }}');">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript for delete confirmation -->
+    <script>
+        function confirmDelete(userName) {
+            return confirm("Are you sure you want to delete user '" + userName + "'?");
+        }
+    </script>
+{% endblock %}
