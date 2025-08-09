@@ -23,8 +23,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    role = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(50), nullable=False, default='common')
     password_hash = db.Column(db.String(200), nullable=False)
+    tasks = db.relationship('Task', backref='author', lazy=True)
 
     def set_password(self, password):
         """Hashes the password and sets it to the password_hash attribute."""
@@ -58,4 +59,4 @@ class Task(db.Model):
         """
         Returns a string representation of the Task object.
         """
-        return f'<Task {self.id}>'
+        return f'<Task {self.id}: {self.description}>'

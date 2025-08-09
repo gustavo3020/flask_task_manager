@@ -22,18 +22,27 @@
         <ul>
         {% for task in tasks %}
             <li>
-                <!-- Display task details -->
-                Task: {{ task.description }}; 
-                Completed: {{ task.completed }}; 
-                Created at: {{ task.created_at }}
+                <!-- Display task details, with a strike-through if completed -->
+                <span class="{% if task.completed %}completed{% endif %}">
+                    <!-- Displays the task creator's name and the task description -->
+                    Task: {{ task.description }}; 
+                    Completed: {% if task.completed %}Yes{% else %}No{% endif %}; 
+                    Created at: {{ task.created_at }};
+                    Owner: {{ task.author.user_name }}
+                </span>
                 
-                <!-- Form for deleting a task (uses POST method for security) -->
-                <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
-                    <button type="submit">Delete</button>
-                </form>
+                <div>
+                    <!-- Conditional buttons: only show to the task's author or a master user -->
+                    {% if task.user_id == current_user.id or current_user.role == "master" %}
+                        <!-- Form for deleting a task (uses POST method for security) -->
+                        <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
 
-                <!-- Link to the update task page (uses GET method to display form) -->
-                <a href="{{ url_for('update_task', task_id=task.id) }}">Update</a>
+                        <!-- Link to the update task page (uses GET method to display form) -->
+                        <a href="{{ url_for('update_task', task_id=task.id) }}">Update</a>
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
         </ul>

@@ -30,16 +30,18 @@ def load_user(user_id):
 @login_required
 def home():
     """
-    Handles the main page, displaying all tasks and allowing new task creation.
+    Handles the main page, displaying tasks and allowing new task creation.
 
     This page is protected by the `@login_required` decorator, so only
     authenticated users can access it.
 
-    On a GET request, it renders the 'index.html' template with a list of all
-    existing tasks.
-    On a POST request, it processes the form submission to create a new task.
-    If a 'description' is provided, a new Task is added to the database.
-    After a new task is created, it redirects to the home page.
+    On a GET request, it renders the 'index.html' template with a list of
+    tasks filtered by the current user's role.
+    - 'master' users can see all tasks.
+    - Other users can see tasks from all users who share their role.
+
+    On a POST request, it processes the form submission to create a new task,
+    associating it with the current user.
 
     Returns:
         Response: Renders 'index.html' on GET, or redirects to 'home' on POST.
@@ -47,12 +49,18 @@ def home():
     if request.method == 'POST':
         description = request.form.get('description')
         if description:
-            new_task = Task(description=description)
+            new_task = Task(description=description, user_id=current_user.id)
             db.session.add(new_task)
             db.session.commit()
             return redirect(url_for('home'))
 
-    tasks = Task.query.all()
+    # Logic to filter tasks based on user role
+    if current_user.role == 'master':
+        tasks = Task.query.all()
+    else:
+        tasks = db.session.query(Task).join(User).filter(
+            User.role == current_user.role).all()
+
     return render_template('index.html', tasks=tasks)
 
 
@@ -123,33 +131,22 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # Fail-fast validation for empty fields.
         if not all([user_name, email, password]):
             flash('All fields are required.', 'error')
         else:
             try:
-                # Creates a new User object with the default 'common' role.
-                new_user = User(user_name=user_name, email=email,
-                                role='common')
-                # Hashes the password before saving it to the database for
-                # security.
+                new_user = User(user_name=user_name, email=email)
                 new_user.set_password(password)
-                # Adds the new user to the database session.
                 db.session.add(new_user)
-                # Commits the transaction and saves the user to the database.
                 db.session.commit()
                 flash('Registration successful! Please log in to continue.',
                       'success')
                 return redirect(url_for('login'))
             except IntegrityError:
-                # Catches the duplicate email error, rolls back the session,
-                # and notifies the user.
                 db.session.rollback()
                 flash('''This email is already registered. Please use a
                       different one.''', 'error')
             except Exception as e:
-                # Catches unexpected errors, rolls back the session, and
-                # notifies the user.
                 db.session.rollback()
                 flash(f'An unexpected error occurred: {e}', 'error')
 
@@ -174,11 +171,17 @@ def update_task(task_id):
     description and completion status. After updating, it commits the changes
     to the database and redirects to the home page.
 
+    Security check is performed to ensure only the task's author or a 'master'
+    user can perform the update.
+
     Returns:
         Response: Renders 'update_task.html' on GET, or redirects to 'home' on
         POST.
     """
     task = db.get_or_404(Task, task_id)
+    if task.user_id != current_user.id and current_user.role != 'master':
+        flash('You do not have permission to update this task.', 'error')
+        return redirect(url_for('home'))
 
     if request.method == 'POST':
         task.description = request.form['description']
@@ -204,10 +207,19 @@ def delete_task(task_id):
     On a POST request, it deletes the specified task from the database.
     After deletion, it commits the changes and redirects to the home page.
 
+    Security check is performed to ensure only the task's author or a 'master'
+    user can perform the deletion.
+
     Returns:
         Response: Redirects to the 'home' page.
     """
     task_to_delete = db.get_or_404(Task, task_id)
+
+    if (task_to_delete.user_id != current_user.id
+            and current_user.role != 'master'):
+        flash('You do not have permission to delete this task.', 'error')
+        return redirect(url_for('home'))
+
     db.session.delete(task_to_delete)
     db.session.commit()
     return redirect(url_for('home'))
