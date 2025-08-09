@@ -3,13 +3,16 @@ from flask_login import LoginManager, login_user, logout_user, current_user, \
     login_required
 from models import db, Task, User
 from sqlalchemy.exc import IntegrityError
+import os
 
 # Create the Flask application and configure the secret key for sessions
 app = Flask(__name__)
 app.secret_key = 'b\x80V\xe1s\x00S\xdbd\xc2\xc9\x04\xf1\xf4\x8e\x16'
 
-# Database configuration (SQLite)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL',
+    'postgresql://postgres:x9abc4tv@localhost:5432/task_manager_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database and Flask-Login
@@ -322,7 +325,4 @@ def delete_user(user_id):
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0')
