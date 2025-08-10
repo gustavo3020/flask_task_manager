@@ -248,7 +248,7 @@ li a:hover {
     flex-grow: 1;
 }
 
-.task-description {
+.task-title {
     font-size: 1.1em;
     font-weight: bold;
     color: #444;

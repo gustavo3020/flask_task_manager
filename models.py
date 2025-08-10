@@ -42,7 +42,10 @@ class Task(db.Model):
 
     Attributes:
         id (int): Primary key, unique identifier for the task.
-        description (str): A brief text describing the task.
+        title (str): The main title of the task.
+        description (str): A detailed description of the task.
+        priority (int): The priority level of the task (e.g., 1=Low, 5=High).
+        due_date (datetime): The deadline for the task.
         completed (bool): Indicates whether the task is completed (True) or not
         (False).
         created_at (datetime): Timestamp when the task was created.
@@ -50,13 +53,16 @@ class Task(db.Model):
     """
     __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.String)
+    priority = db.Column(db.Integer, default=1)
+    due_date = db.Column(db.Date)
     completed = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(db.Date, default=db.func.current_date())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         """
         Returns a string representation of the Task object.
         """
-        return f'<Task {self.id}: {self.description}>'
+        return f'<Task {self.id}: {self.title}>'

@@ -1,8 +1,10 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, current_user, \
     login_required
+from flask_migrate import Migrate
 from models import db, Task, User
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 import os
 
 # Create the Flask application and configure the secret key for sessions
@@ -20,6 +22,8 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+migrate = Migrate(app, db)
 
 
 # User loader function for Flask-Login
@@ -44,17 +48,37 @@ def home():
     - Other users can see tasks from all users who share their role.
 
     On a POST request, it processes the form submission to create a new task,
-    associating it with the current user.
+    associating it with the current user. The new task includes a title,
+    description, priority, and due date.
 
     Returns:
         Response: Renders 'index.html' on GET, or redirects to 'home' on POST.
     """
     if request.method == 'POST':
+        title = request.form.get('title')
         description = request.form.get('description')
-        if description:
-            new_task = Task(description=description, user_id=current_user.id)
-            db.session.add(new_task)
-            db.session.commit()
+        priority_str = request.form.get('priority')
+        due_date_str = request.form.get('due_date')
+
+        if title:
+            try:
+                priority = int(priority_str) if priority_str else 1
+                due_date = datetime.strptime(
+                    due_date_str, '%Y-%m-%d').date() if due_date_str else None
+
+                new_task = Task(
+                    title=title,
+                    description=description,
+                    priority=priority,
+                    due_date=due_date,
+                    user_id=current_user.id
+                )
+                db.session.add(new_task)
+                db.session.commit()
+            except (ValueError, IndexError):
+                flash('Invalid data submitted for priority or due date.',
+                      'error')
+
             return redirect(url_for('home'))
 
     # Logic to filter tasks based on user role
@@ -191,13 +215,16 @@ def update_task(task_id):
         task_id (int): The unique identifier of the task to be updated.
 
     On a GET request, it renders the 'update_task.html' template, pre-filling
-    the form with the current task details.
-    On a POST request, it processes the form submission to update the task's
-    description and completion status. After updating, it commits the changes
-    to the database and redirects to the home page.
+    the form with all the current task details, including title, description,
+    priority, and due date.
 
-    Security check is performed to ensure only the task's author or a 'master'
-    user can perform the update.
+    On a POST request, it processes the form submission to update the task's
+    title, description, priority, due date, and completion status. After
+    updating, it commits the changes to the database and redirects to the home
+    page.
+
+    A security check is performed to ensure only the task's author or a
+    'master' user can perform the update.
 
     Returns:
         Response: Renders 'update_task.html' on GET, or redirects to 'home' on
@@ -209,7 +236,10 @@ def update_task(task_id):
         return redirect(url_for('home'))
 
     if request.method == 'POST':
+        task.title = request.form['title']
         task.description = request.form['description']
+        task.priority = request.form['priority']
+        task.due_date = request.form['due_date']
         task.completed = request.form.get('completed') == 'True'
         db.session.commit()
         return redirect(url_for('home'))

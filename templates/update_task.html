@@ -10,8 +10,17 @@
         <!-- Form for updating an existing task -->
         <form method="POST">
             <div class="form-group">
-                <label for="description">Task Description:</label>
-                <input type="text" id="description" name="description" value="{{ task.description }}" class="form-control" required>
+                <label for="title">Task Title:</label>
+                <input type="text" id="title" name="title" value="{{ task.title }}" class="form-control" required>
+
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" value="{{ task.description }}" class="form-control">
+
+                <label for="priority">Priority:</label>
+                <input type="number" id="priority" name="priority" min="1" max="5" value="{{ task.priority }}" class="form-control" required>
+
+                <label for="due_date">Due Date:</label>
+                <input type="date" id="due_date" name="due_date" value="{{ task.due_date }}" class="form-control" required>
             </div>
 
             <div class="form-group">
