@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Create Task{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <!-- Heading for the create task form -->
+        <h1 class="main-heading">Create Task</h1>
+
+        <!-- Form for creating a new task -->
+        <form method="POST" action="{{ url_for('create_task') }}" class="task-form">
+            <div class="form-group">
+                <label for="title">Task Title:</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+                
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" class="form-control">
+                
+                <label for="priority">Priority:</label>
+                <input type="number" id="priority" name="priority" value="1" min="1" max="5" class="form-control" required>
+                
+                <label for="due_date">Due Date:</label>
+                <input type="date" id="due_date" name="due_date" class="form-control" required>
+            </div>
+            <input type="submit" value="Add Task" class="btn btn-primary">
+
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+{% endblock %}

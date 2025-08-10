@@ -33,55 +33,24 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 @login_required
 def home():
     """
-    Handles the main page, displaying tasks and allowing new task creation.
+    Handles the main page, displaying tasks.
 
     This page is protected by the `@login_required` decorator, so only
     authenticated users can access it.
 
-    On a GET request, it renders the 'index.html' template with a list of
-    tasks filtered by the current user's role.
+    This route fetches a list of tasks and renders the 'index.html' template.
+    The tasks are filtered based on the current user's role:
     - 'master' users can see all tasks.
     - Other users can see tasks from all users who share their role.
 
-    On a POST request, it processes the form submission to create a new task,
-    associating it with the current user. The new task includes a title,
-    description, priority, and due date.
-
     Returns:
-        Response: Renders 'index.html' on GET, or redirects to 'home' on POST.
+        Response: Renders 'index.html' with the filtered task list.
     """
-    if request.method == 'POST':
-        title = request.form.get('title')
-        description = request.form.get('description')
-        priority_str = request.form.get('priority')
-        due_date_str = request.form.get('due_date')
 
-        if title:
-            try:
-                priority = int(priority_str) if priority_str else 1
-                due_date = datetime.strptime(
-                    due_date_str, '%Y-%m-%d').date() if due_date_str else None
-
-                new_task = Task(
-                    title=title,
-                    description=description,
-                    priority=priority,
-                    due_date=due_date,
-                    user_id=current_user.id
-                )
-                db.session.add(new_task)
-                db.session.commit()
-            except (ValueError, IndexError):
-                flash('Invalid data submitted for priority or due date.',
-                      'error')
-
-            return redirect(url_for('home'))
-
-    # Logic to filter tasks based on user role
     if current_user.role == 'master':
         tasks = Task.query.all()
     else:
@@ -200,6 +169,57 @@ def register():
                 flash(f'An unexpected error occurred: {e}', 'error')
 
     return render_template('register.html')
+
+
+@app.route('/create_task', methods=['GET', 'POST'])
+@login_required
+def create_task():
+    """
+    Handles the creation of a new task.
+
+    This page is protected by the `@login_required` decorator, so only
+    authenticated users can access it.
+
+    On a GET request, it renders the 'create_task.html' template, which
+    contains the form for adding a new task.
+
+    On a POST request, it processes the form submission to create a new task
+    with a title, description, priority, and due date. It validates the data
+    types and, if successful, adds the new task to the database and
+    redirects to the home page.
+
+    Returns:
+        Response: Renders 'create_task.html' on GET, or redirects to 'home'
+        on POST.
+    """
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        priority_str = request.form.get('priority')
+        due_date_str = request.form.get('due_date')
+
+        if title:
+            try:
+                priority = int(priority_str) if priority_str else 1
+                due_date = datetime.strptime(
+                    due_date_str, '%Y-%m-%d').date() if due_date_str else None
+
+                new_task = Task(
+                    title=title,
+                    description=description,
+                    priority=priority,
+                    due_date=due_date,
+                    user_id=current_user.id
+                )
+                db.session.add(new_task)
+                db.session.commit()
+            except (ValueError, IndexError):
+                flash('Invalid data submitted for priority or due date.',
+                      'error')
+
+            return redirect(url_for('home'))
+
+    return render_template('create_task.html')
 
 
 @app.route('/update_task/<int:task_id>', methods=['GET', 'POST'])

@@ -7,26 +7,9 @@
         <!-- Main heading for the task manager application -->
         <h1 class="main-heading">Task Manager</h1>
 
-        <!-- Section for creating a new task -->
-        <h2>New Task</h2>
-        <form method="POST" action="{{ url_for('home') }}" class="task-form">
-            <div class="form-group">
-                <label for="title">Task Title:</label>
-                <input type="text" id="title" name="title" class="form-control" required>
-                
-                <label for="description">Description:</label>
-                <input type="text" id="description" name="description" class="form-control">
-                
-                <label for="priority">Priority:</label>
-                <input type="number" id="priority" name="priority" value="1" min="1" max="5" class="form-control" required>
-                
-                <label for="due_date">Due Date:</label>
-                <input type="date" id="due_date" name="due_date" class="form-control" required>
-            </div>
-            <input type="submit" value="Add Task" class="btn btn-primary">
-        </form>
-
-        <hr> <!-- Horizontal rule to separate sections -->
+        <a href="{{ url_for('create_task') }}" class="btn btn-primary" title="Create Task">
+            Create Task
+        </a>
 
         <!-- Section for displaying the list of tasks -->
         <h2>All tasks</h2>
