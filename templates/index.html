@@ -11,8 +11,42 @@
             Create Task
         </a>
 
-        <!-- Section for displaying the list of tasks -->
         <h2>All tasks</h2>
+
+        <!-- Filter Form -->
+        <form method="GET" action="{{ url_for('home') }}">
+            <div class="filter-form">
+                <div class="filter-form-item">
+                    <label for="completed">Task status:</label>
+                    <select id="completed" name="completed" class="filter-form-control">
+                        <option value="">All</option>
+                        <option value="False" {% if filter_args.get('completed') == 'False' %}selected{% endif %}>In Progress</option>
+                        <option value="True" {% if filter_args.get('completed') == 'True' %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                <div class="filter-form-item">
+                    <label for="priority">Priority:</label>
+                    <input type="number" id="priority" name="priority" min="1" max="5" class="filter-form-control" value="{{ filter_args.get('priority', '') }}">
+                </div>
+                <div class="filter-form-item">
+                    <label for="user_id">Owner:</label>
+                    <select id="user_id" name="user_id" class="filter-form-control">
+                        <option value="">All</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if filter_args.get('user_id', default=0)|int == user.id %}selected{% endif %}>
+                                {{ user.user_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </form>
+
+        <!-- Section for displaying the list of tasks -->
         {% if tasks %}
             <ul class="task-list">
             {% for task in tasks %}

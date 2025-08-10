@@ -43,21 +43,50 @@ def home():
     authenticated users can access it.
 
     This route fetches a list of tasks and renders the 'index.html' template.
-    The tasks are filtered based on the current user's role:
-    - 'master' users can see all tasks.
-    - Other users can see tasks from all users who share their role.
+    The tasks are initially filtered based on the current user's role, and
+    can be further filtered using query parameters from the request, such as
+    `completed`, `priority`, and `user_id`.
 
     Returns:
-        Response: Renders 'index.html' with the filtered task list.
+        Response: Renders 'index.html' with the filtered task list,
+        the list of all users, and the `request.args` for persistent filters.
     """
-
     if current_user.role == 'master':
-        tasks = Task.query.all()
+        query = Task.query
     else:
-        tasks = db.session.query(Task).join(User).filter(
-            User.role == current_user.role).all()
+        # For non-master users, filter tasks by their role
+        query = db.session.query(Task).join(User).filter(
+            User.role == current_user.role
+        )
 
-    return render_template('index.html', tasks=tasks)
+    # Apply additional filters conditionally based on request arguments
+    completed = request.args.get('completed')
+    priority = request.args.get('priority')
+    user_id = request.args.get('user_id')
+
+    if completed == 'True':
+        query = query.filter(Task.completed == True)
+    elif completed == 'False':
+        query = query.filter(Task.completed == False)
+
+    if priority:
+        try:
+            query = query.filter(Task.priority == int(priority))
+        except (ValueError, IndexError):
+            flash('Invalid priority filter value.', 'error')
+
+    if user_id:
+        try:
+            query = query.filter(Task.user_id == int(user_id))
+        except (ValueError, IndexError):
+            flash('Invalid user ID filter value.', 'error')
+
+    tasks = query.all()
+    users = User.query.all()
+
+    # Pass the request arguments back to the template for sticky filters
+    return render_template('index.html', tasks=tasks, users=users,
+                           filter_args=request.args)
 
 
 @app.route('/admin', methods=['GET', 'POST'])

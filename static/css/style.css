@@ -492,3 +492,52 @@ li a:hover {
 .delete-btn:hover {
     background-color: #f8d7da;
 }
+
+
+/* --- Filter form styles --- */
+
+/* Main container for the form */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
+    align-items: flex-end; /* Aligns form items to the bottom */
+    gap: 15px; /* Spacing between form items */
+    background-color: #f8f9fa; /* A light gray background */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for a raised effect */
+}
+
+/* Container for each form item (label + control) */
+.filter-form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels for form fields */
+.filter-form-item label {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+/* Form controls (input and select) */
+.filter-form-control {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #495057;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 150px; /* Ensures fields don't get too small */
+}
+
+/* Style for fields when they are in focus */
+.filter-form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
