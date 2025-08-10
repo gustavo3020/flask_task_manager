@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Task Details{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <!-- Main heading for the task detail page -->
+        <h1 class="main-heading">Task Details</h1>
+        <div class="task-detail-card">
+            <div class="task-header">
+                <h2>{{ task.title }}</h2>
+                <span class="badge priority-{{ task.priority }}">Priority {{ task.priority }}</span>
+            </div>
+            <p class="task-description">
+                <strong>Description:</strong> {{ task.description }}
+            </p>
+            <div class="task-meta">
+                <p><strong>Owner:</strong> {{ task.author.user_name }}</p>
+                <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+                <p><strong>Created At:</strong> {{ task.created_at }}</p>
+                <p><strong>Status:</strong>
+                    {% if task.completed %}
+                        <span class="status-completed"><i class="fas fa-check-circle"></i> Completed</span>
+                    {% else %}
+                        <span class="status-in-progress"><i class="fas fa-times-circle"></i> In Progress</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="task-actions">
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Go Back</a>
+                {% if task.user_id == current_user.id or current_user.role == "master" %}
+                    <a href="{{ url_for('update_task', task_id=task.id) }}" class="btn btn-primary">Edit Task</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

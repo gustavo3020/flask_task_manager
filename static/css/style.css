@@ -369,3 +369,126 @@ li a:hover {
     align-items: center;
     margin-bottom: 20px;
 }
+
+/* Styles for the task detail card */
+.task-detail-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Simple animation for the card to fade in smoothly */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style for the card header */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.task-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #333;
+}
+
+/* Style for the priority badge */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Colors for each priority level */
+.priority-1 { background-color: #28a745; }
+.priority-2 { background-color: #17a2b8; }
+.priority-3 { background-color: #ffc107; }
+.priority-4 { background-color: #fd7e14; }
+.priority-5 { background-color: #dc3545; }
+
+/* Style for the description and metadata */
+.task-description {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.task-meta {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* Style for task status */
+.status-completed { color: #28a745; font-weight: bold; }
+.status-in-progress { color: #dc3545; font-weight: bold; }
+
+/* Styles for action buttons */
+.task-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+/* --- Styles for action icons in the task list --- */
+
+.btn-action {
+    color: #6c757d;
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-action:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+/* Details icon (eye) */
+.detail-btn {
+    color: #17a2b8;
+}
+
+.detail-btn:hover {
+    background-color: #e2f5f7;
+}
+
+/* Update icon (pencil) */
+.update-btn {
+    color: #ffc107;
+}
+
+.update-btn:hover {
+    background-color: #fff3cd;
+}
+
+/* Delete icon (trash can) */
+.delete-btn {
+    color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #f8d7da;
+}

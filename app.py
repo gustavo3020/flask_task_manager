@@ -171,6 +171,30 @@ def register():
     return render_template('register.html')
 
 
+@app.route('/task_detail/<int:task_id>')
+@login_required
+def task_detail(task_id):
+    """
+    Handles displaying the details of a single task.
+
+    This page is protected by the `@login_required` decorator. All
+    authenticated users have permission to view any task's details, regardless
+    of who created it.
+
+    Args:
+        task_id (int): The unique identifier of the task to be displayed.
+
+    The function fetches the task from the database using its ID. If the task
+    is not found, a 404 error page is returned automatically.
+
+    Returns:
+        Response: Renders the 'task_detail.html' template, passing the
+        requested task object.
+    """
+    task = db.get_or_404(Task, task_id)
+    return render_template('task_detail.html', task=task)
+
+
 @app.route('/create_task', methods=['GET', 'POST'])
 @login_required
 def create_task():
